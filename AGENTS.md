@@ -176,3 +176,34 @@ CI's `check-markers` gate fails:
 This repository contains only Community Edition code. NEVER refer to proprietary/Pro code or features
 in files in this repository. When working on code here, ALWAYS verify that this separation
 is maintained.
+
+## Local Deployment Log (May 22, 2026)
+
+### Deployment Outcome
+- Source-based Docker image build succeeded: `semgrep-local:latest`
+- Running service container: `semgrep-mcp`
+- Runtime command:
+  - `semgrep mcp --transport streamable-http --port 8000`
+- Published endpoint:
+  - `0.0.0.0:8000 -> 8000/tcp`
+- Runtime version observed in container logs:
+  - `Starting Semgrep MCP server version v1.163.0`
+
+### Windows Worktree Compatibility Fixes Applied During Build
+- Added CRLF-to-LF normalization steps in `Dockerfile` for shell entrypoints copied into Linux build stages.
+- Added restoration logic in `Dockerfile` for Windows symlink placeholders materialized as plain text path files.
+  - This specifically addressed `.atd` references and `interfaces/semgrep_interfaces` placeholder resolution.
+
+### Safe Docker Cache Cleanup
+- Command run:
+  - `docker builder prune -f`
+- Reclaimed build cache:
+  - `3.822 GB`
+- Post-cleanup service health:
+  - `semgrep-mcp` remained running.
+
+### Post-Cleanup Docker Disk Summary
+- Images: `33.76 GB` (reclaimable `4.277 GB`)
+- Containers: `104.4 MB` (reclaimable `104.4 MB`)
+- Local Volumes: `3.132 GB` (reclaimable `204 B`)
+- Build Cache: `18.54 GB` (reclaimable `0 B`)
